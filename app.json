@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Marathi-Status-App",
-    "slug": "Marathi-Status-App",
+    "name": "Marathi Status",
+    "slug": "Marathi Status",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/App_Logo2.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Splash4.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#f3cb9b"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -20,6 +20,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package":"com.dnyaneshbachhav.marathistatus",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
