@@ -102,7 +102,7 @@ function Full_ImageScreen({navigation,route}){
     
       setDownloadingCount(null);
       setSharing(null);
-      await Sharing.shareAsync( localUrl);
+      await Sharing.shareAsync(localUrl);
     }
 
 
