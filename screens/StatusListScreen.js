@@ -14,6 +14,7 @@ import * as Sharing from 'expo-sharing';
 import { list } from "firebase/storage";
 import * as IntentLauncher from "expo-intent-launcher";
 import Constants from "expo-constants";
+import { FlashList } from "@shopify/flash-list";
 
 const ICON_SIZE = 20;
 const CARD_HEIGHT_PER = 24;
@@ -154,48 +155,50 @@ function Status_Options({navigation,route}){
     let openShareDialogAsyncLocal = async (url)=> {
         console.log("Function called for local uri...");
         await Sharing.shareAsync(url);
-    } 
-
-    useEffect(async ()=>{
-    if(refresh)
-    {
-      setRefresh(false);
     }
-    // Check if user is in Download Section
-    if(route.params.englishTitle == "Download")
-    {
-        console.log("You are in Download Section...");
-        setIsDownloadSection(true);
-    }
-
-    
-      // check if user is connected or not
-    const userConnected = await checkConnection();
-    setConnected(userConnected);
-    // set active tab
-    const activeTab = route.params.englishTitle;
-    
-    
-    if(userConnected)
-    {
+    async function getData1(){
+      if(refresh)
+      {
+        setRefresh(false);
+      }
+      // Check if user is in Download Section
       if(route.params.englishTitle == "Download")
       {
-            const getAlbumData12 = await getAlbumData();
-            setAlbumData(getAlbumData12);
-            console.log("AlbumData 1:"+getAlbumData12);
-            console.log("You are in Download Section...");
-            // setIsDownloadSection(true);
-        }
-        else{
-          console.log(`You are in ${activeTab} Section...`);
-           
-          getData(activeTab);
-        }
-    }
-    else{
-      console.log("User id not connected...!!!");
-    }
-
+          console.log("You are in Download Section...");
+          setIsDownloadSection(true);
+      }
+  
+      
+        // check if user is connected or not
+      const userConnected = await checkConnection();
+      setConnected(userConnected);
+      // set active tab
+      const activeTab = route.params.englishTitle;
+      
+      
+      if(userConnected)
+      {
+        if(route.params.englishTitle == "Download")
+        {
+              const getAlbumData12 = await getAlbumData();
+              setAlbumData(getAlbumData12);
+              console.log("AlbumData 1:"+getAlbumData12);
+              console.log("You are in Download Section...");
+              // setIsDownloadSection(true);
+          }
+          else{
+            console.log(`You are in ${activeTab} Section...`);
+             
+            getData(activeTab);
+          }
+      }
+      else{
+        console.log("User id not connected...!!!");
+      }
+  
+      } 
+    useEffect(()=>{
+      getData1();
     },[refresh]);
 
     return(
@@ -212,10 +215,10 @@ function Status_Options({navigation,route}){
                 : <SavedImages getAlbum={albumData} listOptionHeight={listOptionHeight} navigation={navigation} route={route} openShareDialogAsyncLocal={openShareDialogAsyncLocal} />
               )
             : (
-                <FlatList
+                <FlashList
                     showsVerticalScrollIndicator={false}
                     data={imgArray}
-                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'space-evenly'}}
+                    columnWrapperStyle={{ alignItems: 'center', justifyContent: 'space-around' }}
                     contentContainerStyle={styles.flatListContainer}
                     renderItem={ ({item,index})=>(
                         <View style={{...styles.listOption,height: listOptionHeight}} onPress={()=>{
@@ -235,7 +238,7 @@ function Status_Options({navigation,route}){
                                     source={{
                                         uri: item.image_url,
                                     }}
-                                    style={{width: '100%',height: '95%',  resizeMode: 'cover',position:'absolute' }}
+                                    style={{width: '100%',height: '100%',  resizeMode: 'cover',position:'absolute' }}
                                 />
                             </TouchableOpacity>
                             {/* To show downloading percentage */}
@@ -250,11 +253,16 @@ function Status_Options({navigation,route}){
                         </View>
                     ) }
                     numColumns={COLUMN_NUM}
-                    style={styles.flatListStyle}
                     keyExtarctor={item => item.id}
                     bounces={true}
                     extraData={selectImage}
+                    estimatedItemSize={100}
                 />
+    //             <FlashList
+    //   data={DATA}
+    //   renderItem={({ item }) => <Text>{item.title}</Text>}
+    //   estimatedItemSize={200}
+    // />
                 )
             //  </View>
             // </ScrollView>
@@ -319,10 +327,10 @@ const ShareButton = ({localUri,openShareDialogAsyncLocal})=>{
 const SavedImages = ({getAlbum,listOptionHeight,navigation,route,openShareDialogAsyncLocal})=>{
   
    return (
-     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
+     <View style={{ flex: 1 }}>
        {
        getAlbum!= "null" ? (
-       <FlatList
+       <FlashList
          showsVerticalScrollIndicator={false}
          data={getAlbum}
          columnWrapperStyle={{
@@ -368,6 +376,7 @@ const SavedImages = ({getAlbum,listOptionHeight,navigation,route,openShareDialog
          style={styles.flatListStyle}   
          keyExtarctor={(item) => item.id}
          bounces={true}
+         estimatedItemSize={100}
        /> )
        : 
        <View style={{justifyContent: 'center',alignContent: 'center',backgroundColor: COLORS.secondary,height: '100%' }} >
@@ -459,6 +468,9 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     backgroundColor: COLORS.secondary,
+    paddingHorizontal: 10,
+    // justifyContent: 'center',
+    // alignItems: 'center'
     //paddingBottom: 20
   },
   list: {
@@ -469,10 +481,12 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-around'
   },
   listOption: {
-    width: "40%",
+    width: "90%",
+    // borderWidth: 1,
     backgroundColor: COLORS.white,
     borderRadius: 10,
     overflow: "hidden",
+    marginLeft: 8,
     elevation: 8,
     marginBottom: 15
   },
@@ -497,8 +511,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
   },
   flatListContainer: {
-
-    paddingBottom: 15
+    paddingTop: 10,
+    paddingBottom: 15,
   },
   textStyle:{
     color: COLORS.primary,
