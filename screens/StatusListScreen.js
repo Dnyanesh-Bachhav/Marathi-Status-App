@@ -15,6 +15,7 @@ import { list } from "firebase/storage";
 import * as IntentLauncher from "expo-intent-launcher";
 import Constants from "expo-constants";
 import { FlashList } from "@shopify/flash-list";
+import { async } from "@firebase/util";
 
 const ICON_SIZE = 20;
 const CARD_HEIGHT_PER = 24;
@@ -24,7 +25,7 @@ const COLUMN_NUM = 2;
 function Status_Options({navigation,route}){
 
     const [imgArray,setImgArray] = useState(null);
-    let [downloading,setDownloading] = useState(null);
+    const [downloading,setDownloading] = useState("");
     const [downloadingCount,setDownloadingCount] = useState("0%");
     const [selectImage,setSelectImage] = useState(null);
     const [sharing,setSharing] = useState(null);
@@ -60,6 +61,7 @@ function Status_Options({navigation,route}){
 
     // Download Image
     let downloadImage = async (uri, index) => {
+      setDownloading(index);
       console.log("Download function Called...");
       const url = uri;
       console.log("Downloading:"+downloading+"Index"+index);
@@ -249,7 +251,7 @@ function Status_Options({navigation,route}){
                                     (index===sharing) ?<View style={{position: 'absolute',width: '100%',height: '100%',backgroundColor: 'rgba(97, 97, 97,0.8)',justifyContent: 'center',alignItems: 'center' }}><Text style={{fontSize: 20}}>{downloadingCount}</Text></View> : null
                                 }
                             </View>
-                            { isDownloadSection ? <ShareButton url={item.image_url} index={index} setSharing={setSharing} openShareDialogAsyncLocal={openShareDialogAsyncLocal} /> : <DownloadAndShare  downloadImage={downloadImage} setDownloading={setDownloading} url={item.image_url} index={index} setSharing={setSharing} openShareDialogAsync={openShareDialogAsync} /> }
+                            { isDownloadSection ? <ShareButton url={item.image_url} index={index} setSharing={setSharing} openShareDialogAsyncLocal={openShareDialogAsyncLocal} /> : <DownloadAndShare  downloadImage={downloadImage} setDownloading={setDownloading} url={item.image_url} index={index} setSharing={setSharing} downloading={downloading} openShareDialogAsync={openShareDialogAsync} /> }
                         </View>
                     ) }
                     numColumns={COLUMN_NUM}
@@ -285,14 +287,15 @@ function Status_Options({navigation,route}){
     );
 }
 // Download and share button for every card item
-const DownloadAndShare = ({ downloadImage,url,index,setDownloading,openShareDialogAsync,setSharing,isLocalUri,localUri})=>{
+const DownloadAndShare = ({ downloadImage,url,index, downloading,setDownloading,openShareDialogAsync,setSharing,isLocalUri,localUri})=>{
     return(
         <View style={styles.iconContainer}>
             <View style={styles.iconList}>
-                <TouchableOpacity onPress={()=>{
+                <TouchableOpacity onPress={async ()=>{
                     console.log("Download Button Clicked..."+url);
-                    setDownloading(index);
-                    downloadImage(url,index);
+                    await setDownloading(index1 => index);
+                    await downloadImage(url,index);
+                    console.log(downloading);
                 }} >
                     <Feather name="download" size={ICON_SIZE} color="white" />
                 </TouchableOpacity>
@@ -373,7 +376,7 @@ const SavedImages = ({getAlbum,listOptionHeight,navigation,route,openShareDialog
            </View>
          )}
          numColumns={COLUMN_NUM}
-         style={styles.flatListStyle}   
+        //  style={styles.flatListStyle}   
          keyExtarctor={(item) => item.id}
          bounces={true}
          estimatedItemSize={100}

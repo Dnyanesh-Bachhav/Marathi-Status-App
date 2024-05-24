@@ -20,7 +20,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package":"com.dnyaneshbachhav.marathistatus",
+      "package": "com.dnyaneshbachhav.marathistatus",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -29,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3a691e4e-1a3a-4749-b46e-a0c321d0e448"
+      }
     }
   }
 }
