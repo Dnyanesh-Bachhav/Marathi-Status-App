@@ -245,12 +245,13 @@ function Status_Options({navigation,route}){
                             </TouchableOpacity>
                             {/* To show downloading percentage */}
                                 {
-                                    (index===downloading) ?<View style={{position: 'absolute',width: '100%',height: '100%',backgroundColor: 'rgba(97, 97, 97,0.8)',justifyContent: 'center',alignItems: 'center' }}><Text style={{fontSize: 20}}>{downloadingCount}</Text></View> : null
+                                    (index===downloading) ?<View style={{width: '100%',height: '100%',backgroundColor: 'rgba(97, 97, 97,0.8)',justifyContent: 'center',alignItems: 'center' }}><Text style={{fontSize: 20}}>1212{downloadingCount}</Text></View> : null
                                 }
                                 {
                                     (index===sharing) ?<View style={{position: 'absolute',width: '100%',height: '100%',backgroundColor: 'rgba(97, 97, 97,0.8)',justifyContent: 'center',alignItems: 'center' }}><Text style={{fontSize: 20}}>{downloadingCount}</Text></View> : null
                                 }
                             </View>
+                            
                             { isDownloadSection ? <ShareButton url={item.image_url} index={index} setSharing={setSharing} openShareDialogAsyncLocal={openShareDialogAsyncLocal} /> : <DownloadAndShare  downloadImage={downloadImage} setDownloading={setDownloading} url={item.image_url} index={index} setSharing={setSharing} downloading={downloading} openShareDialogAsync={openShareDialogAsync} /> }
                         </View>
                     ) }
